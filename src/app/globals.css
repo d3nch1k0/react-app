@@ -1,0 +1,136 @@
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+.block1 {
+    width: 100%;
+    height: 10vh;
+    background-color: rgb(8, 78, 47);
+    gap: 10px;
+    display: flex;
+    align-items: center; /* Выравниваем по вертикали */
+    top: 0;
+    left: 0;
+    right: 0;
+    position: fixed;
+    z-index: 1000; /* Чтобы было поверх контента */
+}
+
+.nav {
+    padding: 1%;
+    gap: 10px;
+    display: flex;
+    width: 100%;
+    justify-content: center; /* Центрируем ссылки */
+    align-items: center;
+}
+
+.main {
+    background-color: rgb(146, 230, 174);
+    min-height: 100%; /* Используем min-height вместо height */
+    padding: 20px;
+}
+
+.footer {
+    background-color: rgb(146, 230, 174);
+    height: 10vh;
+    color: rgb(11, 49, 31);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bottom {
+    font-size: large;
+    border-radius: 20px;
+    height: 40px; /* Фиксированная высота */
+    min-width: 120px; /* Минимальная ширина */
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    white-space: nowrap;
+    text-decoration: none;
+    color: rgb(165, 212, 181);
+    background-color: rgba(255, 255, 255, 0.1); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation-name: left;
+    animation-duration: 2s;
+    animation-delay: 0.1s;
+    animation-fill-mode: both; /* Чтобы сохранилось конечное состояние */
+    transition: all 0.3s ease; /* Плавные переходы */
+}
+
+.bottom:hover {
+    color: rgb(50, 173, 132);
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px); /* Легкий подъем при наведении */
+}
+
+@keyframes left {
+    from {
+        transform: translateX(-1000px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+    /* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    .nav {
+        justify-content: space-around; /* Равномерное распределение на мобильных */
+    }
+    
+    .bottom {
+        min-width: 100px;
+        font-size: medium;
+        padding: 8px 16px;
+    }
+}
+/* Дополнительные стили для формы */
+.form-input:focus {
+    outline: none;
+    border-color: #08572f;
+    box-shadow: 0 0 5px rgba(8, 87, 47, 0.3);
+}
+
+.submit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background-color: #064025;
+}
+
+.delete-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    background-color: #c82333;
+}
+
+/* Адаптивность для формы */
+@media (max-width: 768px) {
+    .form-container {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+    
+    .user-card {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+}
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Другие ваши глобальные стили */
