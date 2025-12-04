@@ -1,107 +1,159 @@
-    "use client";
+"use client";
 
-    import Link from "next/link";
+import { useState, useEffect } from 'react';
+import { authService } from '../lib/auth-service';
+import Link from 'next/link';
 
-    export default function Dashboard() {
+export default function Dashboard() {
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const user = authService.getCurrentUser();
+    setCurrentUser(user);
+    setLoading(false);
+  }, []);
+
+  const handleLogout = () => {
+    authService.logout();
+    window.location.href = '/';
+  };
+
+  if (loading) {
+    return <div style={{ padding: '50px', textAlign: 'center' }}>Загрузка...</div>;
+  }
+
+  if (!currentUser) {
     return (
-        <>
-        <header className="header">
-            <div className="block1">
-            <nav className="nav">
-                <Link href="/blog" className="bottom">Лента новостей</Link>
-            </nav>
-            </div>
-        </header>
-        
-        <main className="main">
-            <div style={dashboardStyle}>
-            <h1 style={{ color: '#08572f', textAlign: 'center', marginBottom: '30px' }}>
-                🎉 Добро пожаловать в личный кабинет!
-            </h1>
-            
-            <div style={welcomeCardStyle}>
-                <h2>Личный кабинет пользователя</h2>
-                <p>Вы успешно вошли в систему. Здесь вы можете управлять своим профилем.</p>
-                
-                <div style={featuresStyle}>
-                <h3>Доступные функции:</h3>
-                <ul style={featuresListStyle}>
-                    <li>📊 Просмотр статистики</li>
-                    <li>👤 Редактирование профиля</li>
-                    <li>🔐 Настройки безопасности</li>
-                    <li>📝 История активности</li>
-                </ul>
-                </div>
-                
-                <div style={actionsStyle}>
-                <Link href="/" style={actionButtonSecondaryStyle}>
-                    Выйти
-                </Link>
-                </div>
-            </div>
-            </div>
-        </main>
-        
-        <footer className="footer">
-            Личный кабинет пользователя
-        </footer>
-        </>
+      <div style={{ padding: '50px', textAlign: 'center' }}>
+        <h1>Доступ запрещен</h1>
+        <p>Войдите в систему чтобы увидеть личный кабинет</p>
+        <Link href="/" style={{ color: '#08572f', textDecoration: 'underline' }}>
+          Вернуться на главную
+        </Link>
+      </div>
     );
-    }
+  }
 
-    const dashboardStyle = {
-    maxWidth: '600px',
-    margin: '0 auto',
-    padding: '40px 20px'
-    };
+  return (
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
+        <h1 style={{ color: '#08572f' }}>👤 Личный кабинет</h1>
+        <div>
+          <Link href="/blog" style={{ 
+            marginRight: '15px',
+            padding: '8px 16px',
+            background: '#08572f',
+            color: 'white',
+            textDecoration: 'none',
+            borderRadius: '5px'
+          }}>
+            📝 Блог
+          </Link>
+          <button 
+            onClick={handleLogout}
+            style={{
+              padding: '8px 16px',
+              background: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Выйти
+          </button>
+        </div>
+      </header>
 
-    const welcomeCardStyle = {
-    background: 'rgba(255, 255, 255, 0.95)',
-    padding: '40px',
-    borderRadius: '15px',
-    boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-    border: '2px solid rgba(8, 87, 47, 0.3)',
-    textAlign: 'center' as const
-    };
+      <div style={{ 
+        background: '#f8f9fa', 
+        padding: '30px', 
+        borderRadius: '10px',
+        marginBottom: '30px'
+      }}>
+        <h2 style={{ color: '#08572f', marginBottom: '20px' }}>Ваш профиль</h2>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px' }}>
+          <div style={{ background: 'white', padding: '20px', borderRadius: '8px' }}>
+            <h3 style={{ marginTop: 0 }}>👤 Основная информация</h3>
+            <p><strong>Имя:</strong> {currentUser.name}</p>
+            <p><strong>Email:</strong> {currentUser.email}</p>
+            <p><strong>ID:</strong> {currentUser.id}</p>
+          </div>
+          
+          <div style={{ background: 'white', padding: '20px', borderRadius: '8px' }}>
+            <h3 style={{ marginTop: 0 }}>📊 Статистика</h3>
+            <p><strong>Дата регистрации:</strong> {new Date(currentUser.created_at || Date.now()).toLocaleDateString('ru-RU')}</p>
+            <p><strong>Статус:</strong> Активен ✅</p>
+          </div>
+        </div>
 
-    const featuresStyle = {
-    margin: '30px 0',
-    textAlign: 'left' as const
-    };
+        <div style={{ 
+          background: 'white', 
+          padding: '20px', 
+          borderRadius: '8px',
+          marginBottom: '30px'
+        }}>
+          <h3 style={{ color: '#08572f', marginTop: 0 }}>🚀 Быстрые действия</h3>
+          <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
+            <Link href="/blog" style={{
+              padding: '12px 20px',
+              background: '#08572f',
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '5px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              📝 Создать пост в блоге
+            </Link>
+            
+            <Link href="/" style={{
+              padding: '12px 20px',
+              background: '#4a6fa5',
+              color: 'white',
+              textDecoration: 'none',
+              borderRadius: '5px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}>
+              👥 Список пользователей
+            </Link>
+          </div>
+        </div>
 
-    const featuresListStyle = {
-    listStyle: 'none',
-    padding: 0,
-    fontSize: '16px',
-    lineHeight: '2'
-    };
+        <div style={{ background: 'white', padding: '20px', borderRadius: '8px' }}>
+          <h3 style={{ color: '#08572f', marginTop: 0 }}>⚠️ Опасная зона</h3>
+          <button 
+            onClick={() => {
+              if (confirm('Вы уверены что хотите удалить аккаунт? Это действие нельзя отменить.')) {
+                authService.deleteAccount(currentUser.id);
+                window.location.href = '/';
+              }
+            }}
+            style={{
+              padding: '10px 20px',
+              background: '#dc3545',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            Удалить аккаунт
+          </button>
+          <p style={{ fontSize: '14px', color: '#666', marginTop: '10px' }}>
+            Внимание: Это удалит ваш аккаунт и все связанные данные.
+          </p>
+        </div>
+      </div>
 
-    const actionsStyle = {
-    display: 'flex',
-    gap: '15px',
-    justifyContent: 'center',
-    flexWrap: 'wrap' as const,
-    marginTop: '30px'
-    };
-
-    const actionButtonStyle = {
-    display: 'inline-block',
-    padding: '12px 25px',
-    backgroundColor: '#08572f',
-    color: 'white',
-    textDecoration: 'none',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    transition: 'all 0.3s ease'
-    };
-
-    const actionButtonSecondaryStyle = {
-    display: 'inline-block',
-    padding: '12px 25px',
-    backgroundColor: '#6c757d',
-    color: 'white',
-    textDecoration: 'none',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    transition: 'all 0.3s ease'
-    };
+      <footer style={{ textAlign: 'center', marginTop: '40px', color: '#666' }}>
+        <p>Личный кабинет пользователя • {new Date().getFullYear()}</p>
+      </footer>
+    </div>
+  );
+}

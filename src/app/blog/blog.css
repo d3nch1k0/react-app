@@ -1,0 +1,423 @@
+.blog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.blog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #08572f;
+}
+
+.blog-header h1 {
+  color: #08572f;
+  margin: 0;
+}
+
+.back-link {
+  color: #08572f;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.blog-main {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .blog-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Форма */
+.form-section {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.form-section h2 {
+  margin-top: 0;
+  color: #08572f;
+}
+
+.search-box {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.search-btn, .clear-btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.search-btn {
+  background: #08572f;
+  color: white;
+}
+
+.clear-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-input, .form-textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-family: inherit;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.tags-input {
+  display: flex;
+  gap: 10px;
+}
+
+.tag-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.add-tag-btn {
+  width: 40px;
+  background: #4a6fa5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.selected-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.remove-tag {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+}
+
+.submit-btn {
+  background: #08572f;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Посты */
+.posts-section h2 {
+  color: #08572f;
+  margin-top: 0;
+}
+
+.count {
+  color: #666;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.loading, .no-posts {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.post-header h3 {
+  margin: 0;
+  color: #08572f;
+  flex: 1;
+}
+
+.like-btn {
+  background: #ffeaea;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: #e63946;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.like-btn:hover {
+  background: #ffd1d1;
+}
+
+.post-meta {
+  display: flex;
+  gap: 15px;
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.post-tag {
+  background: rgba(8, 87, 47, 0.1);
+  color: #08572f;
+  border: 1px solid #08572f;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.post-tag:hover {
+  background: #08572f;
+  color: white;
+}
+
+.post-content {
+  line-height: 1.6;
+  color: #333;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Стили для UserInfo компонента */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(8, 87, 47, 0.08);
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid rgba(8, 87, 47, 0.2);
+}
+
+.user-status {
+  font-size: 1.2em;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #08572f;
+}
+
+.user-type {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.user-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.change-name-btn, .logout-btn {
+  background: rgba(8, 87, 47, 0.1);
+  color: #08572f;
+  border: 1px solid rgba(8, 87, 47, 0.3);
+  padding: 6px 12px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-size: 0.8em;
+  transition: all 0.3s;
+}
+
+.change-name-btn:hover, .logout-btn:hover {
+  background: rgba(8, 87, 47, 0.2);
+}
+
+.logout-btn {
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  border-color: rgba(220, 53, 69, 0.3);
+}
+
+.logout-btn:hover {
+  background: rgba(220, 53, 69, 0.2);
+}
+
+.user-info.loading {
+  min-width: 200px;
+  text-align: center;
+  justify-content: center;
+}
+
+/* Модальное окно для смены имени */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #08572f;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.secondary-btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s;
+}
+
+.secondary-btn:hover {
+  background: #5a6268;
+}
+
+.cancel-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background 0.3s;
+}
+
+.cancel-btn:hover {
+  background: #c82333;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.submit-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.post-as {
+  font-size: 0.9em;
+  color: #08572f;
+}
+
+.post-as strong {
+  font-weight: 600;
+}
