@@ -10,15 +10,14 @@
     background: 'rgba(255, 255, 255, 0.95)',
     padding: '50px 40px',
     borderRadius: '20px',
-    boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
-    border: '3px solid rgba(8, 87, 47, 0.3)',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
     textAlign: 'center' as const,
     maxWidth: '500px',
     width: '100%'
     };
 
     export const successTitleStyle = {
-    color: '#08572f',
+    color: '#081157ff',
     fontSize: '28px',
     marginBottom: '20px'
     };
@@ -44,8 +43,8 @@
     margin: '20px 0',
     padding: '15px',
     background: '#e8f5e8',
-    borderRadius: '10px',
-    border: '1px solid #28a745'
+    borderRadius: '20px',
+
     };
 
     export const spinnerStyle = {
@@ -63,38 +62,38 @@
     export const primaryLinkStyle = {
     display: 'inline-block',
     padding: '15px 30px',
-    backgroundColor: '#08572f',
+    backgroundColor: '#081557ff',
     color: 'white',
     textDecoration: 'none',
-    borderRadius: '10px',
+    borderRadius: '20px',
     fontWeight: 'bold',
     fontSize: '16px',
     transition: 'all 0.3s ease',
     width: '100%',
-    maxWidth: '280px'
+    maxWidth: '280px',
     };
 
     export const backLinkStyle = {
     display: 'inline-block',
     padding: '10px 20px',
-    backgroundColor: '#6c757d',
+    backgroundColor: '#acd8ffb5',
     color: 'white',
     textDecoration: 'none',
-    borderRadius: '6px',
+    borderRadius: '20px',
     fontSize: '14px',
     transition: 'all 0.3s ease',
     width: '100%',
     maxWidth: '180px',
-    marginTop: '10px'
+    marginTop: '10px',
     };
 
     export const dashboardLinkStyle = {
     display: 'inline-block',
     padding: '12px 25px',
-    backgroundColor: '#08572f',
+    backgroundColor: '#081657ff',
     color: 'white',
     textDecoration: 'none',
-    borderRadius: '8px',
+    borderRadius: '15px',
     fontWeight: 'bold',
     marginTop: '10px'
     };
@@ -103,28 +102,30 @@
     maxWidth: '500px',
     margin: '40px auto',
     padding: '30px',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderRadius: '15px',
+    backgroundColor: 'rgba(244, 249, 253, 0.9)',
+    borderRadius: '30px',
     boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-    border: '2px solid rgba(8, 87, 47, 0.2)'
     };
 
     export const formStyle = {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: '20px'
+    gap: '20px',
+    border: 'none',
+    
     };
 
     export const inputGroupStyle = {
 
     display: 'flex',
     flexDirection: 'column' as const
+
     };
 
     export const inputStyle = {
     padding: '15px',
-    border: '2px solid rgba(8, 87, 47, 0.3)',
-    borderRadius: '8px',
+    border: '2px solid rgba(255, 255, 255, 1)',
+    borderRadius: '20px',
     fontSize: '16px',
     backgroundColor: 'rgba(255, 255, 255, 0.8)',
     transition: 'all 0.3s ease'
@@ -132,10 +133,10 @@
 
     export const submitButtonStyle = {
     padding: '15px',
-    backgroundColor: '#08572f',
+    backgroundColor: '#082457ff',
     color: 'white',
     border: 'none',
-    borderRadius: '8px',
+    borderRadius: '20px',
     fontSize: '16px',
     cursor: 'pointer',
     fontWeight: 'bold' as const,
@@ -146,7 +147,7 @@
     marginTop: '25px',
     padding: '20px',
     background: '#f8f9fa',
-    borderRadius: '10px',
+    borderRadius: '20px',
     textAlign: 'center' as const,
     border: '1px solid #dee2e6'
     };
@@ -169,7 +170,6 @@
     alignItems: 'center',
     padding: '20px',
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    border: '2px solid rgba(8, 87, 47, 0.2)',
     borderRadius: '10px',
     boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
     };

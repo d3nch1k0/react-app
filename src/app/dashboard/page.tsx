@@ -28,7 +28,7 @@ export default function Dashboard() {
       <div style={{ padding: '50px', textAlign: 'center' }}>
         <h1>Доступ запрещен</h1>
         <p>Войдите в систему чтобы увидеть личный кабинет</p>
-        <Link href="/" style={{ color: '#08572f', textDecoration: 'underline' }}>
+        <Link href="/" style={{ color: '#080857ff', textDecoration: 'underline' }}>
           Вернуться на главную
         </Link>
       </div>
@@ -36,17 +36,17 @@ export default function Dashboard() {
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px' }}>
+    <div style={{ maxWidth: '800px', margin: '0 auto', padding: '20px'}}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' }}>
-        <h1 style={{ color: '#08572f' }}>Личный кабинет</h1>
+        <h1 style={{ color: '#100857ff' }}>Личный кабинет</h1>
         <div>
           <Link href="/blog" style={{ 
             marginRight: '15px',
             padding: '8px 16px',
-            background: '#08572f',
+            background: '#0d0857ff',
             color: 'white',
             textDecoration: 'none',
-            borderRadius: '5px'
+            borderRadius: '20px'
           }}>
             Блог
           </Link>
@@ -57,7 +57,7 @@ export default function Dashboard() {
               background: '#dc3545',
               color: 'white',
               border: 'none',
-              borderRadius: '5px',
+              borderRadius: '20px',
               cursor: 'pointer'
             }}
           >
@@ -69,10 +69,10 @@ export default function Dashboard() {
       <div style={{ 
         background: '#f8f9fa', 
         padding: '30px', 
-        borderRadius: '10px',
+        borderRadius: '20px',
         marginBottom: '30px'
       }}>
-        <h2 style={{ color: '#08572f', marginBottom: '20px' }}>Ваш профиль</h2>
+        <h2 style={{ color: '#0c0857ff', marginBottom: '20px' }}>Ваш профиль</h2>
         
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '30px' }}>
           <div style={{ background: 'white', padding: '20px', borderRadius: '8px' }}>
@@ -92,17 +92,17 @@ export default function Dashboard() {
         <div style={{ 
           background: 'white', 
           padding: '20px', 
-          borderRadius: '8px',
+          borderRadius: '20px',
           marginBottom: '30px'
         }}>
-          <h3 style={{ color: '#08572f', marginTop: 0 }}>Быстрые действия</h3>
+          <h3 style={{ color: '#0b0857ff', marginTop: 0 }}>Быстрые действия</h3>
           <div style={{ display: 'flex', gap: '15px', flexWrap: 'wrap' }}>
             <Link href="/blog" style={{
               padding: '12px 20px',
-              background: '#08572f',
+              background: '#0d0857ff',
               color: 'white',
               textDecoration: 'none',
-              borderRadius: '5px',
+              borderRadius: '20px',
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px'
@@ -113,7 +113,7 @@ export default function Dashboard() {
         </div>
 
         <div style={{ background: 'white', padding: '20px', borderRadius: '8px' }}>
-          <h3 style={{ color: '#08572f', marginTop: 0 }}>Опасная зона</h3>
+          <h3 style={{ color: '#0f0857ff', marginTop: 0 }}>Опасная зона</h3>
           <button 
             onClick={() => {
               if (confirm('Вы уверены что хотите удалить аккаунт? Это действие нельзя отменить.')) {
@@ -126,7 +126,8 @@ export default function Dashboard() {
               background: '#dc3545',
               color: 'white',
               border: 'none',
-              borderRadius: '5px',
+              
+              borderRadius: '20px',
               cursor: 'pointer'
             }}
           >

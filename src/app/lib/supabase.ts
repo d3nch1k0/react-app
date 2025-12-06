@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, RealtimeChannel } from '@supabase/supabase-js'
 
 const supabaseUrl = 'https://xyjjtcldwluxpanwbmte.supabase.co'
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5amp0Y2xkd2x1eHBhbndibXRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2OTEwNTUsImV4cCI6MjA4MDI2NzA1NX0.aNVI4Tw65QmeNxYdtN9bPTq3EUXe4czBR-VI6qpGR_w'
@@ -14,6 +14,9 @@ export interface BlogPost {
   likes_count: number
   tags: string[]
 }
+
+// Хранилище для каналов подписки
+const channels = new Map<string, RealtimeChannel>()
 
 export const blogApi = {
   async getPosts(tag?: string) {
@@ -59,9 +62,8 @@ export const blogApi = {
     return data as BlogPost
   },
   
-async likePost(postId: number, userId: string) { // Лайк постов
+  async likePost(postId: number, userId: string) {
     if (!userId) return null;
-
 
     const { data: existingLike} = await supabase
       .from('post_likes')
@@ -70,12 +72,9 @@ async likePost(postId: number, userId: string) { // Лайк постов
       .eq('user_id', userId)
       .single();
 
-
     if (existingLike) {
-
       return null;
     }
-
   
     const { error: insertError } = await supabase
       .from('post_likes')
@@ -85,7 +84,6 @@ async likePost(postId: number, userId: string) { // Лайк постов
       console.error('Ошибка добавления лайка:', insertError);
       return null;
     }
-
 
     const { data: post, error: postError } = await supabase
       .from('posts')
@@ -111,5 +109,90 @@ async likePost(postId: number, userId: string) { // Лайк постов
     }
 
     return updatedPost as BlogPost;
+  },
+
+  // Подписка на обновления постов в реальном времени
+  subscribeToPosts(
+    callback: (payload: { eventType: string; new: BlogPost; old?: BlogPost }) => void,
+    filter?: { tag?: string }
+  ) {
+    const channelKey = filter?.tag ? `posts-${filter.tag}` : 'posts-all'
+    
+    // Если уже есть подписка, отписываемся
+    if (channels.has(channelKey)) {
+      this.unsubscribeFromPosts(filter)
+    }
+
+    // Создаем канал для подписки
+    const channel = supabase
+      .channel(channelKey)
+      .on(
+        'postgres_changes',
+        {
+          event: '*', // Все события: INSERT, UPDATE, DELETE
+          schema: 'public',
+          table: 'posts',
+          filter: filter?.tag ? `tags=cs.{${filter.tag}}` : undefined
+        },
+        (payload) => {
+          callback(payload as any)
+        }
+      )
+      .subscribe()
+
+    channels.set(channelKey, channel)
+    
+    return () => this.unsubscribeFromPosts(filter)
+  },
+
+  // Отписка от обновлений
+  unsubscribeFromPosts(filter?: { tag?: string }) {
+    const channelKey = filter?.tag ? `posts-${filter.tag}` : 'posts-all'
+    const channel = channels.get(channelKey)
+    
+    if (channel) {
+      supabase.removeChannel(channel)
+      channels.delete(channelKey)
+    }
+  },
+
+  // Подписка на лайки
+  subscribeToLikes(
+    postId: number,
+    callback: (payload: { eventType: string; new: any; old?: any }) => void
+  ) {
+    const channelKey = `likes-${postId}`
+    
+    if (channels.has(channelKey)) {
+      this.unsubscribeFromLikes(postId)
+    }
+
+    const channel = supabase
+      .channel(channelKey)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'post_likes',
+          filter: `post_id=eq.${postId}`
+        },
+        callback
+      )
+      .subscribe()
+
+    channels.set(channelKey, channel)
+    
+    return () => this.unsubscribeFromLikes(postId)
+  },
+
+  unsubscribeFromLikes(postId: number) {
+    const channelKey = `likes-${postId}`
+    const channel = channels.get(channelKey)
+    
+    if (channel) {
+      supabase.removeChannel(channel)
+      channels.delete(channelKey)
+    }
   }
 }

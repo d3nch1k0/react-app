@@ -184,15 +184,15 @@ if (isRegistered && currentUser) {
       <main className="main">
         <div style={successContainerStyle}>
           <div style={successCardStyle}>
-            <h1 style={successTitleStyle}>🎉 Добро пожаловать, {registeredUser}!</h1>
+            <h1 style={successTitleStyle}>Добро пожаловать, {registeredUser}!</h1>
             <p style={successTextStyle}>
               Вы успешно {showLogin ? 'вошли в систему' : 'зарегистрированы'}!
             </p>
             
             
             <div style={linksContainerStyle}>
-              <Link href="/blog" style={primaryLinkStyle}>
-                📝 Перейти в блог
+              <Link href="/blog" style={primaryLinkStyle}> 
+                Перейти в блог
               </Link>
               <button 
                 onClick={() => {
@@ -202,7 +202,7 @@ if (isRegistered && currentUser) {
                 }}
                 style={{
                   ...backLinkStyle,
-                  background: '#6c757d',
+                  background: '#7dacd570',
                   border: 'none',
                   cursor: 'pointer',
                   marginTop: '10px'
@@ -224,46 +224,11 @@ if (isRegistered && currentUser) {
       <main className="main">
         
         {/* Информация о текущем пользователе */}
-        {currentUser && (
-          <div style={{
-            maxWidth: '500px',
-            margin: '0 auto 30px',
-            padding: '20px',
-            background: '#e8f5e8',
-            borderRadius: '10px',
-            textAlign: 'center'
-          }}>
-            <p>Вы вошли как: <strong>{currentUser.name}</strong></p>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', marginTop: '10px' }}>
-              <Link href="/dashboard" style={{
-                padding: '8px 16px',
-                background: '#08572f',
-                color: 'white',
-                textDecoration: 'none',
-                borderRadius: '5px'
-              }}>
-                Личный кабинет
-              </Link>
-              <button 
-                onClick={handleLogout}
-                style={{
-                  padding: '8px 16px',
-                  background: '#dc3545',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer'
-                }}
-              >
-                Выйти
-              </button>
-            </div>
-          </div>
-        )}
+        
 
         {/* Форма регистрации/входа */}
         <div style={formContainerStyle}>
-          <h2 style={{ textAlign: 'center', color: '#08572f', marginBottom: '20px' }}>
+          <h2 style={{ textAlign: 'center', color: '#081557ff', marginBottom: '20px' }}>
             {showLogin ? 'Вход в систему' : 'Регистрация'}
           </h2>
           
@@ -304,7 +269,7 @@ if (isRegistered && currentUser) {
                       color: '#666'
                     }}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEye />:<FaEyeSlash />}
                   </button>
                 </div>
               </div>
@@ -317,8 +282,8 @@ if (isRegistered && currentUser) {
                   onClick={() => setShowLogin(false)}
                   style={{
                     background: 'none',
-                    border: 'none',
-                    color: '#08572f',
+                    border:'none',
+                    color: '#080c57ff',
                     textDecoration: 'underline',
                     cursor: 'pointer',
                     fontSize: '14px'
@@ -375,7 +340,7 @@ if (isRegistered && currentUser) {
                       color: '#666'
                     }}
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ?  <FaEye />:<FaEyeSlash /> }
                   </button>
                 </div>
               </div>
@@ -399,10 +364,11 @@ if (isRegistered && currentUser) {
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#08572f',
+                    color: '#081457ff',
                     textDecoration: 'underline',
                     cursor: 'pointer',
-                    fontSize: '14px'
+                    fontSize: '14px',
+                    
                   }}
                 >
                   Уже есть аккаунт? Войти
@@ -433,9 +399,6 @@ if (isRegistered && currentUser) {
         
 
       </main>
-      <footer className="footer">
-        Этот сайт сделали Владос Денчик и Ваня
-      </footer>
     </>
   );
 }
