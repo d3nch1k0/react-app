@@ -1,7 +1,8 @@
 import { createClient, RealtimeChannel } from '@supabase/supabase-js'
 
 const supabaseUrl = 'https://xyjjtcldwluxpanwbmte.supabase.co'
-const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5amp0Y2xkd2x1eHBhbndibXRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2OTEwNTUsImV4cCI6MjA4MDI2NzA1NX0.aNVI4Tw65QmeNxYdtN9bPTq3EUXe4czBR-VI6qpGR_w'
+const supabaseAnonKey =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh5amp0Y2xkd2x1eHBhbndibXRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2OTEwNTUsImV4cCI6MjA4MDI2NzA1NX0.aNVI4Tw65QmeNxYdtN9bPTq3EUXe4czBR-VI6qpGR_w'
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
@@ -15,184 +16,130 @@ export interface BlogPost {
   tags: string[]
 }
 
-// Хранилище для каналов подписки
 const channels = new Map<string, RealtimeChannel>()
 
 export const blogApi = {
+  /** Получение постов + фильтр по тегу */
   async getPosts(tag?: string) {
     let query = supabase
       .from('posts')
       .select('*')
       .order('created_at', { ascending: false })
-    
+
     if (tag) {
-      query = query.contains('tags', [tag])
+      query = query.contains('tags', [tag]) // для JSONB массива ✔️
     }
-    
+
     const { data, error } = await query
-    
+
     if (error) {
-      console.error('Error:', error)
+      console.error('Error loading posts:', error)
       return []
     }
-    
+
     return data as BlogPost[]
   },
-  
-  async createPost(title: string, content: string, tags: string[] = [], authorName?: string) {
+
+  /** Создание поста */
+  async createPost(title: string, content: string, tags: string[], authorName: string) {
     const { data, error } = await supabase
       .from('posts')
-      .insert([
-        { 
-          title, 
-          content, 
-          author_name: authorName || 'Гость',
-          likes_count: 0,
-          tags: tags
-        }
-      ])
+      .insert([{ title, content, tags, author_name: authorName, likes_count: 0 }])
       .select()
       .single()
-    
+
     if (error) {
-      console.error('Error:', error)
+      console.error('Error creating post:', error)
       return null
     }
-    
+
     return data as BlogPost
   },
-  
-  async likePost(postId: number, userId: string) {
-    if (!userId) return null;
 
-    const { data: existingLike} = await supabase
+async likePost(postId: number, userId: string) {
+  if (!userId) return null;
+
+  // Проверяем, есть ли лайк
+  const { data: existingLike } = await supabase
+    .from('post_likes')
+    .select('*')
+    .eq('post_id', postId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (existingLike) {
+    // Убираем лайк
+    await supabase
       .from('post_likes')
-      .select('*')
+      .delete()
       .eq('post_id', postId)
-      .eq('user_id', userId)
-      .single();
-
-    if (existingLike) {
-      return null;
-    }
-  
-    const { error: insertError } = await supabase
+      .eq('user_id', userId);
+  } else {
+    // Добавляем лайк
+    await supabase
       .from('post_likes')
       .insert([{ post_id: postId, user_id: userId }]);
+  }
 
-    if (insertError) {
-      console.error('Ошибка добавления лайка:', insertError);
-      return null;
-    }
+  // Пересчитываем likes_count для поста
+  const { count, error } = await supabase
+    .from('post_likes')
+    .select('*', { count: 'exact', head: true })
+    .eq('post_id', postId);
 
-    const { data: post, error: postError } = await supabase
-      .from('posts')
-      .select('likes_count')
-      .eq('id', postId)
-      .single();
+  if (error) {
+    console.error('Ошибка подсчёта лайков:', error);
+    return null;
+  }
 
-    if (postError || !post) {
-      console.error('Ошибка получения поста:', postError);
-      return null;
-    }
+  const likes_count = count || 0;
 
-    const { data: updatedPost, error: updateError } = await supabase
-      .from('posts')
-      .update({ likes_count: (post.likes_count || 0) + 1 })
-      .eq('id', postId)
-      .select()
-      .single();
+  // Обновляем поле posts.likes_count
+  const { data: updatedPost, error: updateError } = await supabase
+    .from('posts')
+    .update({ likes_count })
+    .eq('id', postId)
+    .select()
+    .single();
 
-    if (updateError) {
-      console.error('Ошибка обновления лайков:', updateError);
-      return null;
-    }
+  if (updateError) {
+    console.error('Ошибка обновления likes_count:', updateError);
+    return null;
+  }
 
-    return updatedPost as BlogPost;
-  },
+  return updatedPost as BlogPost;
+},
 
-  // Подписка на обновления постов в реальном времени
-  subscribeToPosts(
-    callback: (payload: { eventType: string; new: BlogPost; old?: BlogPost }) => void,
-    filter?: { tag?: string }
-  ) {
-    const channelKey = filter?.tag ? `posts-${filter.tag}` : 'posts-all'
-    
-    // Если уже есть подписка, отписываемся
-    if (channels.has(channelKey)) {
-      this.unsubscribeFromPosts(filter)
-    }
+subscribeToPosts(callback: (payload: any) => void, tag?: string) {
+  const key = tag ? `posts-${tag}` : 'posts-all'
 
-    // Создаем канал для подписки
-    const channel = supabase
-      .channel(channelKey)
-      .on(
-        'postgres_changes',
-        {
-          event: '*', // Все события: INSERT, UPDATE, DELETE
-          schema: 'public',
-          table: 'posts',
-          filter: filter?.tag ? `tags=cs.{${filter.tag}}` : undefined
-        },
-        (payload) => {
-          callback(payload as any)
-        }
-      )
-      .subscribe()
+  // отписка если уже есть
+  if (channels.has(key)) this.unsubscribeFromPosts(tag)
 
-    channels.set(channelKey, channel)
-    
-    return () => this.unsubscribeFromPosts(filter)
-  },
+  const channel = supabase.channel(key)
 
-  // Отписка от обновлений
-  unsubscribeFromPosts(filter?: { tag?: string }) {
-    const channelKey = filter?.tag ? `posts-${filter.tag}` : 'posts-all'
-    const channel = channels.get(channelKey)
-    
-    if (channel) {
-      supabase.removeChannel(channel)
-      channels.delete(channelKey)
-    }
-  },
+  channel.on(
+    'postgres_changes',
+    {
+      event: '*',
+      schema: 'public',
+      table: 'posts',
+      filter: tag ? `tags=cs.{"${tag}"}` : undefined
+    },
+    callback
+  )
 
-  // Подписка на лайки
-  subscribeToLikes(
-    postId: number,
-    callback: (payload: { eventType: string; new: any; old?: any }) => void
-  ) {
-    const channelKey = `likes-${postId}`
-    
-    if (channels.has(channelKey)) {
-      this.unsubscribeFromLikes(postId)
-    }
+  channel.subscribe()
+  channels.set(key, channel)
 
-    const channel = supabase
-      .channel(channelKey)
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'post_likes',
-          filter: `post_id=eq.${postId}`
-        },
-        callback
-      )
-      .subscribe()
+  return () => this.unsubscribeFromPosts(tag)
+},
 
-    channels.set(channelKey, channel)
-    
-    return () => this.unsubscribeFromLikes(postId)
-  },
-
-  unsubscribeFromLikes(postId: number) {
-    const channelKey = `likes-${postId}`
-    const channel = channels.get(channelKey)
-    
-    if (channel) {
-      supabase.removeChannel(channel)
-      channels.delete(channelKey)
-    }
+  unsubscribeFromPosts(tag?: string) {
+    const key = tag ? `posts-${tag}` : 'posts-all'
+    const ch = channels.get(key)
+    if (ch) supabase.removeChannel(ch)
+    channels.delete(key)
   }
 }
+
