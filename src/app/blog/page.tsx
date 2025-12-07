@@ -101,25 +101,20 @@ export default function BlogPage() {
     setSearchTag('');
     loadPosts();
   };
-
+ // ---- лайки ----
   const handleLike = async (postId: number) => {
-  const currentUser = authService.getCurrentUser();
-  const userId = currentUser?.id; 
+    const user = authService.getCurrentUser()
+    if (!user?.id) return
 
-  console.log('Текущий пользователь id:', userId);
+    const updated = await blogApi.likePost(postId, user.id)
+    if (!updated) return
 
-  if (!userId) return;
-
-  const updatedPost = await blogApi.likePost(postId, userId);
-
-  if (updatedPost) {
-    setPosts(posts.map(post =>
-      post.id === postId ? { ...post, likes_count: updatedPost.likes_count } : post
-    ));
-  } else {
-    alert('Вы уже лайкали этот пост');
+    setPosts(prev =>
+      prev.map(p => (p.id === postId ? { ...p, likes_count: updated.likes_count } : p))
+    )
   }
-};
+
+
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ru-RU', {
