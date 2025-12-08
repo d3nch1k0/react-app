@@ -63,10 +63,9 @@ export default function BlogPage() {
   
   setSubmitting(true);
   try {
-    // Получаем имя пользователя
-    let authorName = currentUserName; // Из UserInfo
+    let authorName = currentUserName; 
     
-    // Если пользователь авторизован через authService
+
     const currentUser = authService.getCurrentUser();
     if (currentUser && currentUser.name) {
       authorName = currentUser.name;
@@ -101,7 +100,7 @@ export default function BlogPage() {
     setSearchTag('');
     loadPosts();
   };
- // ---- лайки ----
+
   const handleLike = async (postId: number) => {
     const user = authService.getCurrentUser()
     if (!user?.id) return

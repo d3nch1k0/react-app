@@ -1,4 +1,4 @@
-    // src/app/components/UserInfo.tsx
+
     "use client";
 
     import { useState, useEffect } from 'react';
@@ -48,9 +48,7 @@
     const handleLogout = async () => {
         try {
         authService.logout();
-        // Обновляем информацию
         await loadUserInfo();
-        // Перезагружаем страницу
         window.location.reload();
         } catch (error) {
         console.error('Ошибка выхода:', error);
@@ -61,13 +59,10 @@
         if (!customName.trim()) return;
 
         if (isAuthenticated) {
-        // Для авторизованных пользователей можно сохранить имя
-        // Пока просто меняем локально
         setUserName(customName.trim());
         if (onNameChange) onNameChange(customName.trim());
         setShowNameModal(false);
         } else {
-        // Для гостей - сохраняем в localStorage
         userNameService.changeGuestName(customName);
         setUserName(customName.trim());
         if (onNameChange) onNameChange(customName.trim());
@@ -89,27 +84,11 @@
 
     return (
         <>
-        {isAuthenticated? '':<div className="user-info">
-            <div className="user-status">
-            {isAuthenticated ? '✅' : '👤'}
-            </div>
-            <div className="user-details">
-            <span className="user-name">{userName}</span>
-            <span className="user-type">
-                {isAuthenticated ? 'Авторизован' : 'Гость'}
-            </span>
-            </div>
-            <div className="user-actions">
+        {isAuthenticated? '':
+
             <button onClick={handleChangeName} className="change-name-btn">
-                Изменить имя
-            </button>
-            {isAuthenticated && (
-                <button onClick={handleLogout} className="logout-btn">
-                Выйти
-                </button>
-            )}
-            </div>
-        </div>}
+                👤
+            </button>}
 
         {showNameModal && (
             <div className="modal-overlay" onClick={() => setShowNameModal(false)}>

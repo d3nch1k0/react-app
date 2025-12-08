@@ -1,4 +1,4 @@
-// src/app/lib/user-name-service.ts
+
 import { authService } from './auth-service';
 
 export const userNameService = {
@@ -11,12 +11,11 @@ export const userNameService = {
         return this.getGuestName();
       }
 
-      // Используем имя из текущего пользователя
       if (currentUser.name) {
         return currentUser.name;
       }
 
-      // Если нет имени, используем email
+
       if (currentUser.email) {
         return currentUser.email.split('@')[0];
       }

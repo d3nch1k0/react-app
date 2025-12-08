@@ -87,6 +87,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+
 }
 
 .search-btn {
@@ -95,7 +96,7 @@
 }
 
 .clear-btn {
-  background: #dc3545;
+  background: #ffffff;
   color: white;
 }
 

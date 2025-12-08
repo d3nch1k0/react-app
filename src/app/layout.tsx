@@ -7,8 +7,8 @@ const openSans = Open_Sans({
   variable: "--font-open-sans",
   subsets: ["latin", "cyrillic"],
   weight: ["300", "400", "500", "600", "700", "800"],
-  style: ["normal", "italic"], // если нужны курсивные версии
-  display: "swap", // для лучшего performance
+  style: ["normal", "italic"], 
+  display: "swap", 
 });
 
 export const metadata: Metadata = {

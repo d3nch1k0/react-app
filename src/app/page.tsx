@@ -7,7 +7,7 @@ import './globals.css';
 import { authService } from './lib/auth-service';
 import { supabase } from './lib/supabase';
 
-// Импортируем стили
+
 import {
   successContainerStyle,
   successCardStyle,
@@ -55,27 +55,26 @@ export default function Home() {
   const [showPassword, setShowPassword] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
 
-  // Проверяем авторизацию и загружаем пользователей
   useEffect(() => {
     const user = authService.getCurrentUser();
     setCurrentUser(user);
     loadUsers();
   }, []);
 
-  // Загрузить всех пользователей
+
   const loadUsers = async () => {
   setIsLoading(true);
   try {
-    // Пробуем загрузить из Supabase
+
     const { data: supabaseUsers } = await supabase
       .from('users')
       .select('*')
       .order('created_at', { ascending: false });
     
-    // Загружаем из localStorage
+
     const localUsers = JSON.parse(localStorage.getItem('local_users') || '[]');
     
-    // Объединяем оба источника (убираем дубли по email)
+
     const allUsers = [...(supabaseUsers || []), ...localUsers];
     const uniqueUsers = Array.from(
       new Map(allUsers.map(user => [user.email, user])).values()
@@ -84,18 +83,18 @@ export default function Home() {
     setUsers(uniqueUsers);
   } catch (error) {
     console.error('Ошибка загрузки пользователей:', error);
-    // Fallback на localStorage
+
     const localUsers = JSON.parse(localStorage.getItem('local_users') || '[]');
     setUsers(localUsers);
   }
   setIsLoading(false);
 };
 
-  // Регистрация
+
 const handleRegister = async (e: React.FormEvent) => {
   e.preventDefault();
   
-  // Валидация
+
   if (!name.trim() || !email.trim() || !password.trim()) {
     alert('Заполните все поля');
     return;
@@ -114,7 +113,7 @@ const handleRegister = async (e: React.FormEvent) => {
   console.log('Отправка регистрации...');
   const result = await authService.register(name, email, password);
   
-  //объект пользователя
+
   if (result && result.name) {
     console.log('Регистрация успешна:', result);
     setRegisteredUser(result.name);
@@ -133,7 +132,7 @@ const handleRegister = async (e: React.FormEvent) => {
   }
 };
 
-  // Вход
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -156,7 +155,6 @@ const handleRegister = async (e: React.FormEvent) => {
     }
   };
 
-  // Выход
   const handleLogout = () => {
     authService.logout();
     setCurrentUser(null);
@@ -176,7 +174,6 @@ const handleRegister = async (e: React.FormEvent) => {
     setLoginPassword('');
   };
 
-  // Если успешная регистрация/вход
 if (isRegistered && currentUser) {
   return (
     <>

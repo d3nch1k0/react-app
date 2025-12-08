@@ -19,7 +19,7 @@ export interface BlogPost {
 const channels = new Map<string, RealtimeChannel>()
 
 export const blogApi = {
-  /** Получение постов + фильтр по тегу */
+
   async getPosts(tag?: string) {
     let query = supabase
       .from('posts')
@@ -27,7 +27,7 @@ export const blogApi = {
       .order('created_at', { ascending: false })
 
     if (tag) {
-      query = query.contains('tags', [tag]) // для JSONB массива ✔️
+      query = query.contains('tags', [tag]) 
     }
 
     const { data, error } = await query
@@ -40,7 +40,7 @@ export const blogApi = {
     return data as BlogPost[]
   },
 
-  /** Создание поста */
+
   async createPost(title: string, content: string, tags: string[], authorName: string) {
     const { data, error } = await supabase
       .from('posts')
@@ -59,7 +59,7 @@ export const blogApi = {
 async likePost(postId: number, userId: string) {
   if (!userId) return null;
 
-  // Проверяем, есть ли лайк
+
   const { data: existingLike } = await supabase
     .from('post_likes')
     .select('*')
@@ -68,20 +68,19 @@ async likePost(postId: number, userId: string) {
     .maybeSingle();
 
   if (existingLike) {
-    // Убираем лайк
+
     await supabase
       .from('post_likes')
       .delete()
       .eq('post_id', postId)
       .eq('user_id', userId);
   } else {
-    // Добавляем лайк
+
     await supabase
       .from('post_likes')
       .insert([{ post_id: postId, user_id: userId }]);
   }
 
-  // Пересчитываем likes_count для поста
   const { count, error } = await supabase
     .from('post_likes')
     .select('*', { count: 'exact', head: true })
@@ -94,7 +93,6 @@ async likePost(postId: number, userId: string) {
 
   const likes_count = count || 0;
 
-  // Обновляем поле posts.likes_count
   const { data: updatedPost, error: updateError } = await supabase
     .from('posts')
     .update({ likes_count })
@@ -113,7 +111,6 @@ async likePost(postId: number, userId: string) {
 subscribeToPosts(callback: (payload: any) => void, tag?: string) {
   const key = tag ? `posts-${tag}` : 'posts-all'
 
-  // отписка если уже есть
   if (channels.has(key)) this.unsubscribeFromPosts(tag)
 
   const channel = supabase.channel(key)
